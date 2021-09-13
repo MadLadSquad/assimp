@@ -64,6 +64,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <rapidjson/document.h>
 #include <rapidjson/rapidjson.h>
 
+#if _MSC_VER && !__INTEL_COMPILER
+    #pragma warning(disable: 2220)
+#endif
+
 using namespace Assimp;
 using namespace glTF2;
 using namespace glTFCommon;
