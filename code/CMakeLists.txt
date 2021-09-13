@@ -757,7 +757,7 @@ TARGET_USE_COMMON_OUTPUT_DIRECTORY(assimp)
 
 # enable warnings as errors ########################################
 IF (MSVC)
-  TARGET_COMPILE_OPTIONS(assimp PRIVATE /WX)
+  TARGET_COMPILE_OPTIONS(assimp PRIVATE)
 ELSE()
   TARGET_COMPILE_OPTIONS(assimp PRIVATE -Werror)
 ENDIF()

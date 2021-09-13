@@ -259,9 +259,9 @@ IF ((CMAKE_C_COMPILER_ID MATCHES "GNU") AND NOT CMAKE_COMPILER_IS_MINGW)
 ELSEIF(MSVC)
   # enable multi-core compilation with MSVC
   IF(CMAKE_CXX_COMPILER_ID MATCHES "Clang" ) # clang-cl
-    ADD_COMPILE_OPTIONS(/bigobj /W4 )
+    ADD_COMPILE_OPTIONS(/bigobj )
   ELSE() # msvc
-    ADD_COMPILE_OPTIONS(/MP /bigobj /W4 )
+    ADD_COMPILE_OPTIONS(/MP /bigobj )
   ENDIF()
   # disable "elements of array '' will be default initialized" warning on MSVC2013
   IF(MSVC12)
@@ -314,7 +314,6 @@ ENDIF()
 IF (ASSIMP_ERROR_MAX)
   MESSAGE(STATUS "Turning on all warnings")
   IF (MSVC)
-    ADD_COMPILE_OPTIONS(/W4) # NB: there is a /Wall option, pedantic mode
   ELSE()
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
@@ -603,7 +602,6 @@ ELSE()
       # See https://github.com/google/draco/issues/672
       # and https://github.com/google/draco/issues/673
       IF(MSVC)
-        set(DRACO_CXX_FLAGS "/W0")
       ELSE()
         list(APPEND DRACO_CXX_FLAGS
           "-Wno-bool-compare"
