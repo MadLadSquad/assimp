@@ -94,6 +94,9 @@ corresponding preprocessor flag to selectively disable formats.
 #define ASSIMP_BUILD_NO_MD5_IMPORTER
 #define ASSIMP_BUILD_NO_MS3D_IMPORTER
 #define ASSIMP_BUILD_NO_NFF_IMPORTER
+#define ASSIMP_BUILD_NO_MD2_IMPORTER
+#define ASSIMP_BUILD_NO_3MF_IMPORTER
+#define ASSIMP_BUILD_NO_MMD_IMPORTER
 
 #ifndef ASSIMP_BUILD_NO_X_IMPORTER
 #include "AssetLib/X/XFileImporter.h"

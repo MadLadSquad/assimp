@@ -211,10 +211,6 @@ SET( CApi_SRCS
 SOURCE_GROUP(CApi FILES ${CApi_SRCS})
 
 SET( STEPParser_SRCS
-  AssetLib/STEPParser/STEPFileReader.h
-  AssetLib/STEPParser/STEPFileReader.cpp
-  AssetLib/STEPParser/STEPFileEncoding.cpp
-  AssetLib/STEPParser/STEPFileEncoding.h
 )
 SOURCE_GROUP(STEPParser FILES ${STEPParser_SRCS})
 
@@ -408,11 +404,6 @@ SET( PostProcessing_SRCS
 )
 SOURCE_GROUP( PostProcessing FILES ${PostProcessing_SRCS})
 
-ADD_ASSIMP_IMPORTER( STL
-  AssetLib/STL/STLLoader.cpp
-  AssetLib/STL/STLLoader.h
-)
-
 ADD_ASSIMP_IMPORTER( GLTF
   AssetLib/glTF/glTFCommon.h
   AssetLib/glTF/glTFCommon.cpp
@@ -428,27 +419,6 @@ ADD_ASSIMP_IMPORTER( GLTF
   AssetLib/glTF2/glTF2AssetWriter.inl
   AssetLib/glTF2/glTF2Importer.cpp
   AssetLib/glTF2/glTF2Importer.h
-)
-
-ADD_ASSIMP_IMPORTER(3MF
-  AssetLib/3MF/3MFTypes.h
-  AssetLib/3MF/XmlSerializer.h
-  AssetLib/3MF/XmlSerializer.cpp
-  AssetLib/3MF/D3MFImporter.h
-  AssetLib/3MF/D3MFImporter.cpp
-  AssetLib/3MF/D3MFOpcPackage.h
-  AssetLib/3MF/D3MFOpcPackage.cpp
-  AssetLib/3MF/3MFXmlTags.h
-)
-
-ADD_ASSIMP_IMPORTER( MMD
-  AssetLib/MMD/MMDCpp14.h
-  AssetLib/MMD/MMDImporter.cpp
-  AssetLib/MMD/MMDImporter.h
-  AssetLib/MMD/MMDPmdParser.h
-  AssetLib/MMD/MMDPmxParser.h
-  AssetLib/MMD/MMDPmxParser.cpp
-  AssetLib/MMD/MMDVmdParser.h
 )
 
 # Workaround for issue #2406 - force problematic large file to be optimized to prevent string table overflow error
