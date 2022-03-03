@@ -2,7 +2,9 @@
 Open Asset Import Library (assimp)
 ----------------------------------------------------------------------
 
-Copyright (c) 2006-2021, assimp team
+Copyright (c) 2006-2022, assimp team
+
+
 All rights reserved.
 
 Redistribution and use of this software in source and binary forms,
@@ -38,21 +40,42 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ----------------------------------------------------------------------
 */
 
+/** @file STLExporter.h
+ * Declares the exporter class to write a scene to a Stereolithography (STL) file
+ */
 #pragma once
-#ifndef AI_DEFINES_H_INC
-#define AI_DEFINES_H_INC
+#ifndef AI_STLEXPORTER_H_INC
+#define AI_STLEXPORTER_H_INC
 
-#ifdef __GNUC__
-#   pragma GCC system_header
+#include <sstream>
+
+struct aiScene;
+struct aiNode;
+struct aiMesh;
+
+namespace Assimp {
+
+// ------------------------------------------------------------------------------------------------
+/** Helper class to export a given scene to a STL file. */
+// ------------------------------------------------------------------------------------------------
+class STLExporter {
+public:
+    /// Constructor for a specific scene to export
+    STLExporter(const char *filename, const aiScene *pScene, bool exportPOintClouds, bool binary = false);
+
+    /// public string-streams to write all output into
+    std::ostringstream mOutput;
+
+private:
+    void WritePointCloud(const std::string &name, const aiScene *pScene);
+    void WriteMesh(const aiMesh *m);
+    void WriteMeshBinary(const aiMesh *m);
+
+private:
+    const std::string filename;
+    const std::string endl;
+};
+
+} // namespace Assimp
+
 #endif
-
-// We need those constants, workaround for any platforms where nobody defined them yet
-#if (!defined SIZE_MAX)
-#   define SIZE_MAX (~((size_t)0))
-#endif
-
-#if (!defined UINT_MAX)
-#   define UINT_MAX (~((unsigned int)0))
-#endif
-
-#endif // AI_DEINES_H_INC

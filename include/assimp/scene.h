@@ -3,7 +3,7 @@
 Open Asset Import Library (assimp)
 ---------------------------------------------------------------------------
 
-Copyright (c) 2006-2021, assimp team
+Copyright (c) 2006-2022, assimp team
 
 All rights reserved.
 
@@ -437,7 +437,7 @@ struct aiScene
 };
 
 #ifdef __cplusplus
-} //! namespace Assimp
-#endif
+} 
+#endif //! extern "C"
 
 #endif // AI_SCENE_H_INC
