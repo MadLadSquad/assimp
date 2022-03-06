@@ -63,7 +63,7 @@ corresponding preprocessor flag to selectively disable formats.
 #define ASSIMP_BUILD_NO_HMP_IMPORTER
 #define ASSIMP_BUILD_NO_SMD_IMPORTER
 #define ASSIMP_BUILD_NO_LWO_IMPORTER
-#define ASSIMP_BUILD_NO_M3D_IMPORTER
+//#define ASSIMP_BUILD_NO_M3D_IMPORTER
 #define ASSIMP_BUILD_NO_X3D_IMPORTER
 #define ASSIMP_BUILD_NO_ASSBIN_IMPORTER
 #define ASSIMP_BUILD_NO_XGL_IMPORTER
@@ -98,6 +98,7 @@ corresponding preprocessor flag to selectively disable formats.
 #define ASSIMP_BUILD_NO_MD2_IMPORTER
 #define ASSIMP_BUILD_NO_3MF_IMPORTER
 #define ASSIMP_BUILD_NO_MMD_IMPORTER
+#define ASSIMP_BUILD_NO_IQM_IMPORTER
 
 #ifndef ASSIMP_BUILD_NO_X_IMPORTER
 #include "AssetLib/X/XFileImporter.h"
