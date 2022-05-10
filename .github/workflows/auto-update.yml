@@ -44,5 +44,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           filename: .github/auto-issue-template.md
-          update_existing: false
-          search_existing: all
+          update_existing: true
+          search_existing: open
