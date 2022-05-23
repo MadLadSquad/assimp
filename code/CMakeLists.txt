@@ -446,6 +446,10 @@ if ((NOT ASSIMP_NO_EXPORT) OR (NOT ASSIMP_EXPORTERS_ENABLED STREQUAL ""))
 	  CApi/AssimpCExport.cpp
 	  ${HEADER_PATH}/BlobIOSystem.h
 	)
+	SET( Exporter_SRCS
+	  Common/Exporter.cpp
+	  ${HEADER_PATH}/BlobIOSystem.h
+	)
 	SOURCE_GROUP( Exporter FILES ${Exporter_SRCS})
 endif()
 
@@ -686,7 +690,6 @@ SOURCE_GROUP( include\\assimp    FILES ${PUBLIC_HEADERS} )
 SET( assimp_src
   # Assimp Files
   ${Core_SRCS}
-  ${CApi_SRCS}
   ${Common_SRCS}
   ${Logging_SRCS}
   ${Exporter_SRCS}
