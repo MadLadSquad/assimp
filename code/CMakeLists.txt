@@ -807,7 +807,6 @@ IF (ASSIMP_WARNINGS_AS_ERRORS)
         -Wno-deprecated
         -Wno-format-nonliteral
         -Wno-comma
-        -Wno-unreachable-code-break
         -Wno-implicit-fallthrough
         -Wno-unused-template
         -Wno-undefined-func-template
