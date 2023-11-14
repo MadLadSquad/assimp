@@ -86,7 +86,7 @@ struct Tangent {
 // glTF2Importer
 //
 
-static const aiImporterDesc desc = {
+static constexpr aiImporterDesc desc = {
     "glTF2 Importer",
     "",
     "",
