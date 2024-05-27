@@ -308,9 +308,9 @@ SET(ASSIMP_EXPORTER_SRCS "")
 SET(ASSIMP_EXPORTERS_ENABLED "") # list of enabled exporters
 SET(ASSIMP_EXPORTERS_DISABLED "") # disabled exporters list (used to print)
 
-IF(((CMAKE_C_COMPILER_ID MATCHES "GNU") AND NOT MINGW AND NOT HAIKU) AND CMAKE_CXX_COMPILER_VERSION GREATER_EQUAL 13)
-  message(STATUS "GCC13 detected disabling \"-Warray-bounds and -Wstringop-overflow\" for
-      AssetLib/MDL/MDLLoader.cpp as it appears to be a false positive")
+IF(((CMAKE_CXX_COMPILER_ID MATCHES "GNU") AND NOT MINGW AND NOT HAIKU) AND CMAKE_CXX_COMPILER_VERSION GREATER_EQUAL 13)
+  message(STATUS "GCC13 detected disabling \"-Warray-bounds and -Wstringop-overflow\" for"
+      " AssetLib/MDL/MDLLoader.cpp as it appears to be a false positive")
   set_source_files_properties(AssetLib/MDL/MDLLoader.cpp PROPERTIES
       COMPILE_FLAGS "-Wno-array-bounds -Wno-stringop-overflow"
   )
@@ -333,6 +333,103 @@ ADD_ASSIMP_IMPORTER( OBJ
   AssetLib/Obj/ObjTools.h
 )
 
+<<<<<<< HEAD
+=======
+IF(((CMAKE_CXX_COMPILER_ID MATCHES "GNU") AND NOT MINGW AND NOT HAIKU) AND CMAKE_CXX_COMPILER_VERSION EQUAL 14)
+  message(STATUS "GCC14 detected disabling \"-Wmaybe-uninitialized\" for"
+      " AssetLib/Obj/ObjFileParser.cpp as it appears to be a false positive")
+  set_source_files_properties(AssetLib/Obj/ObjFileParser.cpp PROPERTIES
+      COMPILE_FLAGS "-Wno-maybe-uninitialized"
+  )
+endif()
+
+ADD_ASSIMP_IMPORTER( OGRE
+  AssetLib/Ogre/OgreImporter.h
+  AssetLib/Ogre/OgreStructs.h
+  AssetLib/Ogre/OgreParsingUtils.h
+  AssetLib/Ogre/OgreBinarySerializer.h
+  AssetLib/Ogre/OgreXmlSerializer.h
+  AssetLib/Ogre/OgreImporter.cpp
+  AssetLib/Ogre/OgreStructs.cpp
+  AssetLib/Ogre/OgreBinarySerializer.cpp
+  AssetLib/Ogre/OgreXmlSerializer.cpp
+  AssetLib/Ogre/OgreMaterial.cpp
+)
+
+ADD_ASSIMP_IMPORTER( OPENGEX
+  AssetLib/OpenGEX/OpenGEXImporter.cpp
+  AssetLib/OpenGEX/OpenGEXImporter.h
+  AssetLib/OpenGEX/OpenGEXStructs.h
+)
+
+ADD_ASSIMP_IMPORTER( PLY
+  AssetLib/Ply/PlyLoader.cpp
+  AssetLib/Ply/PlyLoader.h
+  AssetLib/Ply/PlyParser.cpp
+  AssetLib/Ply/PlyParser.h
+)
+
+ADD_ASSIMP_IMPORTER( MS3D
+  AssetLib/MS3D/MS3DLoader.cpp
+  AssetLib/MS3D/MS3DLoader.h
+)
+
+ADD_ASSIMP_IMPORTER( COB
+  AssetLib/COB/COBLoader.cpp
+  AssetLib/COB/COBLoader.h
+  AssetLib/COB/COBScene.h
+)
+
+ADD_ASSIMP_IMPORTER( BLEND
+  AssetLib/Blender/BlenderLoader.cpp
+  AssetLib/Blender/BlenderLoader.h
+  AssetLib/Blender/BlenderDNA.cpp
+  AssetLib/Blender/BlenderDNA.h
+  AssetLib/Blender/BlenderDNA.inl
+  AssetLib/Blender/BlenderScene.cpp
+  AssetLib/Blender/BlenderScene.h
+  AssetLib/Blender/BlenderSceneGen.h
+  AssetLib/Blender/BlenderIntermediate.h
+  AssetLib/Blender/BlenderModifier.h
+  AssetLib/Blender/BlenderModifier.cpp
+  AssetLib/Blender/BlenderBMesh.h
+  AssetLib/Blender/BlenderBMesh.cpp
+  AssetLib/Blender/BlenderTessellator.h
+  AssetLib/Blender/BlenderTessellator.cpp
+  AssetLib/Blender/BlenderCustomData.h
+  AssetLib/Blender/BlenderCustomData.cpp
+)
+
+ADD_ASSIMP_IMPORTER( IFC
+  AssetLib/IFC/IFCLoader.cpp
+  AssetLib/IFC/IFCLoader.h
+  AssetLib/IFC/IFCReaderGen1_2x3.cpp
+  AssetLib/IFC/IFCReaderGen2_2x3.cpp
+  AssetLib/IFC/IFCReaderGen_2x3.h
+  AssetLib/IFC/IFCUtil.h
+  AssetLib/IFC/IFCUtil.cpp
+  AssetLib/IFC/IFCGeometry.cpp
+  AssetLib/IFC/IFCMaterial.cpp
+  AssetLib/IFC/IFCProfile.cpp
+  AssetLib/IFC/IFCCurve.cpp
+  AssetLib/IFC/IFCBoolean.cpp
+  AssetLib/IFC/IFCOpenings.cpp
+)
+
+if (ASSIMP_BUILD_IFC_IMPORTER)
+  if (MSVC)
+    set_source_files_properties(Importer/IFC/IFCReaderGen1_2x3.cpp Importer/IFC/IFCReaderGen2_2x3.cpp PROPERTIES COMPILE_FLAGS "/bigobj")
+  elseif(MINGW)
+    set_source_files_properties(Importer/IFC/IFCReaderGen1_2x3.cpp Importer/IFC/IFCReaderGen2_2x3.cpp PROPERTIES COMPILE_FLAGS "-O2 -Wa,-mbig-obj")
+  endif()
+endif ()
+
+ADD_ASSIMP_IMPORTER( XGL
+  AssetLib/XGL/XGLLoader.cpp
+  AssetLib/XGL/XGLLoader.h
+)
+
+>>>>>>> 83d7216726726a07e9e40f86cc2322b22fec11fa
 ADD_ASSIMP_IMPORTER( FBX
   AssetLib/FBX/FBXImporter.cpp
   AssetLib/FBX/FBXCompileConfig.h
