@@ -333,103 +333,6 @@ ADD_ASSIMP_IMPORTER( OBJ
   AssetLib/Obj/ObjTools.h
 )
 
-<<<<<<< HEAD
-=======
-IF(((CMAKE_CXX_COMPILER_ID MATCHES "GNU") AND NOT MINGW AND NOT HAIKU) AND CMAKE_CXX_COMPILER_VERSION EQUAL 14)
-  message(STATUS "GCC14 detected disabling \"-Wmaybe-uninitialized\" for"
-      " AssetLib/Obj/ObjFileParser.cpp as it appears to be a false positive")
-  set_source_files_properties(AssetLib/Obj/ObjFileParser.cpp PROPERTIES
-      COMPILE_FLAGS "-Wno-maybe-uninitialized"
-  )
-endif()
-
-ADD_ASSIMP_IMPORTER( OGRE
-  AssetLib/Ogre/OgreImporter.h
-  AssetLib/Ogre/OgreStructs.h
-  AssetLib/Ogre/OgreParsingUtils.h
-  AssetLib/Ogre/OgreBinarySerializer.h
-  AssetLib/Ogre/OgreXmlSerializer.h
-  AssetLib/Ogre/OgreImporter.cpp
-  AssetLib/Ogre/OgreStructs.cpp
-  AssetLib/Ogre/OgreBinarySerializer.cpp
-  AssetLib/Ogre/OgreXmlSerializer.cpp
-  AssetLib/Ogre/OgreMaterial.cpp
-)
-
-ADD_ASSIMP_IMPORTER( OPENGEX
-  AssetLib/OpenGEX/OpenGEXImporter.cpp
-  AssetLib/OpenGEX/OpenGEXImporter.h
-  AssetLib/OpenGEX/OpenGEXStructs.h
-)
-
-ADD_ASSIMP_IMPORTER( PLY
-  AssetLib/Ply/PlyLoader.cpp
-  AssetLib/Ply/PlyLoader.h
-  AssetLib/Ply/PlyParser.cpp
-  AssetLib/Ply/PlyParser.h
-)
-
-ADD_ASSIMP_IMPORTER( MS3D
-  AssetLib/MS3D/MS3DLoader.cpp
-  AssetLib/MS3D/MS3DLoader.h
-)
-
-ADD_ASSIMP_IMPORTER( COB
-  AssetLib/COB/COBLoader.cpp
-  AssetLib/COB/COBLoader.h
-  AssetLib/COB/COBScene.h
-)
-
-ADD_ASSIMP_IMPORTER( BLEND
-  AssetLib/Blender/BlenderLoader.cpp
-  AssetLib/Blender/BlenderLoader.h
-  AssetLib/Blender/BlenderDNA.cpp
-  AssetLib/Blender/BlenderDNA.h
-  AssetLib/Blender/BlenderDNA.inl
-  AssetLib/Blender/BlenderScene.cpp
-  AssetLib/Blender/BlenderScene.h
-  AssetLib/Blender/BlenderSceneGen.h
-  AssetLib/Blender/BlenderIntermediate.h
-  AssetLib/Blender/BlenderModifier.h
-  AssetLib/Blender/BlenderModifier.cpp
-  AssetLib/Blender/BlenderBMesh.h
-  AssetLib/Blender/BlenderBMesh.cpp
-  AssetLib/Blender/BlenderTessellator.h
-  AssetLib/Blender/BlenderTessellator.cpp
-  AssetLib/Blender/BlenderCustomData.h
-  AssetLib/Blender/BlenderCustomData.cpp
-)
-
-ADD_ASSIMP_IMPORTER( IFC
-  AssetLib/IFC/IFCLoader.cpp
-  AssetLib/IFC/IFCLoader.h
-  AssetLib/IFC/IFCReaderGen1_2x3.cpp
-  AssetLib/IFC/IFCReaderGen2_2x3.cpp
-  AssetLib/IFC/IFCReaderGen_2x3.h
-  AssetLib/IFC/IFCUtil.h
-  AssetLib/IFC/IFCUtil.cpp
-  AssetLib/IFC/IFCGeometry.cpp
-  AssetLib/IFC/IFCMaterial.cpp
-  AssetLib/IFC/IFCProfile.cpp
-  AssetLib/IFC/IFCCurve.cpp
-  AssetLib/IFC/IFCBoolean.cpp
-  AssetLib/IFC/IFCOpenings.cpp
-)
-
-if (ASSIMP_BUILD_IFC_IMPORTER)
-  if (MSVC)
-    set_source_files_properties(Importer/IFC/IFCReaderGen1_2x3.cpp Importer/IFC/IFCReaderGen2_2x3.cpp PROPERTIES COMPILE_FLAGS "/bigobj")
-  elseif(MINGW)
-    set_source_files_properties(Importer/IFC/IFCReaderGen1_2x3.cpp Importer/IFC/IFCReaderGen2_2x3.cpp PROPERTIES COMPILE_FLAGS "-O2 -Wa,-mbig-obj")
-  endif()
-endif ()
-
-ADD_ASSIMP_IMPORTER( XGL
-  AssetLib/XGL/XGLLoader.cpp
-  AssetLib/XGL/XGLLoader.h
-)
-
->>>>>>> 83d7216726726a07e9e40f86cc2322b22fec11fa
 ADD_ASSIMP_IMPORTER( FBX
   AssetLib/FBX/FBXImporter.cpp
   AssetLib/FBX/FBXCompileConfig.h
@@ -571,6 +474,123 @@ SET( Extra_SRCS
   MD4FileData.h
 )
 SOURCE_GROUP( Extra FILES ${Extra_SRCS})
+
+# USD/USDA/USDC/USDZ support
+# tinyusdz
+IF (ASSIMP_BUILD_USD_IMPORTER)
+    if (ASSIMP_BUILD_USD_VERBOSE_LOGS)
+        ADD_DEFINITIONS( -DASSIMP_USD_VERBOSE_LOGS)
+    endif ()
+    # Use CMAKE_CURRENT_SOURCE_DIR which provides assimp-local path (CMAKE_SOURCE_DIR is
+    # relative to top-level/main project)
+    set(Tinyusdz_BASE_ABSPATH "${CMAKE_CURRENT_SOURCE_DIR}/../contrib/tinyusdz")
+    set(Tinyusdz_REPO_ABSPATH "${Tinyusdz_BASE_ABSPATH}/autoclone")
+
+    # Note: ALWAYS specify a git commit hash (or tag) instead of a branch name; using a branch
+    #       name can lead to non-deterministic (unpredictable) results since the code is potentially
+    #       in flux
+    # "dev" branch, 9 Jul 2024
+    set(TINYUSDZ_GIT_TAG "bd2a1edbbf69f352a6c40730114db9918c384848")
+    message("****")
+    message("\n\n**** Cloning tinyusdz repo, git tag ${TINYUSDZ_GIT_TAG}\n\n")
+
+    # Patch required to build arm32 on android
+    set(TINYUSDZ_PATCH_CMD git apply ${Tinyusdz_BASE_ABSPATH}/patches/tinyusdz.patch)
+
+    # Note: CMake's "FetchContent" (which executes at configure time) is much better for this use case
+    #       than "ExternalProject" (which executes at build time); we just want to clone a repo and
+    #       block (wait) as long as necessary until cloning is complete, so we immediately have full
+    #       access to the cloned source files
+    include(FetchContent)
+    # Only want to clone once (on Android, using SOURCE_DIR will clone per-ABI (x86, x86_64 etc))
+    set(FETCHCONTENT_BASE_DIR ${Tinyusdz_REPO_ABSPATH})
+    set(FETCHCONTENT_QUIET on) # Turn off to troubleshoot repo clone problems
+    set(FETCHCONTENT_UPDATES_DISCONNECTED on) # Prevent other ABIs from re-cloning/re-patching etc
+    FetchContent_Declare(
+            tinyusdz_repo
+            GIT_REPOSITORY "https://github.com/lighttransport/tinyusdz"
+            GIT_TAG        ${TINYUSDZ_GIT_TAG}
+            PATCH_COMMAND  ${TINYUSDZ_PATCH_CMD}
+    )
+    FetchContent_MakeAvailable(tinyusdz_repo)
+    message("**** Finished cloning tinyusdz repo")
+    message("****")
+
+    set(Tinyusdz_SRC_ABSPATH "${Tinyusdz_REPO_ABSPATH}/tinyusdz_repo-src/src")
+    set(Tinyusdz_SRCS
+            ${Tinyusdz_SRC_ABSPATH}/ascii-parser.cc
+            ${Tinyusdz_SRC_ABSPATH}/ascii-parser-basetype.cc
+            ${Tinyusdz_SRC_ABSPATH}/ascii-parser-timesamples.cc
+            ${Tinyusdz_SRC_ABSPATH}/ascii-parser-timesamples-array.cc
+            ${Tinyusdz_SRC_ABSPATH}/asset-resolution.cc
+            ${Tinyusdz_SRC_ABSPATH}/composition.cc
+            ${Tinyusdz_SRC_ABSPATH}/crate-format.cc
+            ${Tinyusdz_SRC_ABSPATH}/crate-pprint.cc
+            ${Tinyusdz_SRC_ABSPATH}/crate-reader.cc
+            ${Tinyusdz_SRC_ABSPATH}/image-loader.cc
+            ${Tinyusdz_SRC_ABSPATH}/image-util.cc
+            ${Tinyusdz_SRC_ABSPATH}/image-writer.cc
+            ${Tinyusdz_SRC_ABSPATH}/io-util.cc
+            ${Tinyusdz_SRC_ABSPATH}/linear-algebra.cc
+            ${Tinyusdz_SRC_ABSPATH}/path-util.cc
+            ${Tinyusdz_SRC_ABSPATH}/pprinter.cc
+            ${Tinyusdz_SRC_ABSPATH}/prim-composition.cc
+            ${Tinyusdz_SRC_ABSPATH}/prim-reconstruct.cc
+            ${Tinyusdz_SRC_ABSPATH}/prim-types.cc
+            ${Tinyusdz_SRC_ABSPATH}/primvar.cc
+            ${Tinyusdz_SRC_ABSPATH}/stage.cc
+            ${Tinyusdz_SRC_ABSPATH}/str-util.cc
+            ${Tinyusdz_SRC_ABSPATH}/tiny-format.cc
+            ${Tinyusdz_SRC_ABSPATH}/tinyusdz.cc
+            ${Tinyusdz_SRC_ABSPATH}/tydra/attribute-eval.cc
+            ${Tinyusdz_SRC_ABSPATH}/tydra/attribute-eval-typed.cc
+            ${Tinyusdz_SRC_ABSPATH}/tydra/attribute-eval-typed-animatable.cc
+            ${Tinyusdz_SRC_ABSPATH}/tydra/attribute-eval-typed-animatable-fallback.cc
+            ${Tinyusdz_SRC_ABSPATH}/tydra/attribute-eval-typed-fallback.cc
+            ${Tinyusdz_SRC_ABSPATH}/tydra/facial.cc
+            ${Tinyusdz_SRC_ABSPATH}/tydra/prim-apply.cc
+            ${Tinyusdz_SRC_ABSPATH}/tydra/render-data.cc
+            ${Tinyusdz_SRC_ABSPATH}/tydra/scene-access.cc
+            ${Tinyusdz_SRC_ABSPATH}/tydra/shader-network.cc
+            ${Tinyusdz_SRC_ABSPATH}/usda-reader.cc
+            ${Tinyusdz_SRC_ABSPATH}/usda-writer.cc
+            ${Tinyusdz_SRC_ABSPATH}/usdc-reader.cc
+            ${Tinyusdz_SRC_ABSPATH}/usdc-writer.cc
+            ${Tinyusdz_SRC_ABSPATH}/usdGeom.cc
+            ${Tinyusdz_SRC_ABSPATH}/usdLux.cc
+            ${Tinyusdz_SRC_ABSPATH}/usdMtlx.cc
+            ${Tinyusdz_SRC_ABSPATH}/usdShade.cc
+            ${Tinyusdz_SRC_ABSPATH}/usdSkel.cc
+            ${Tinyusdz_SRC_ABSPATH}/value-pprint.cc
+            ${Tinyusdz_SRC_ABSPATH}/value-types.cc
+            ${Tinyusdz_SRC_ABSPATH}/xform.cc
+    )
+
+    set(Tinyusdz_DEP_SOURCES
+            ${Tinyusdz_SRC_ABSPATH}/external/fpng.cpp
+            #${Tinyusdz_SRC_ABSPATH}/external/staticstruct.cc
+            #${Tinyusdz_SRC_ABSPATH}/external/string_id/database.cpp
+            #${Tinyusdz_SRC_ABSPATH}/external/string_id/error.cpp
+            #${Tinyusdz_SRC_ABSPATH}/external/string_id/string_id.cpp
+            #${Tinyusdz_SRC_ABSPATH}/external/tinyxml2/tinyxml2.cpp
+            ${Tinyusdz_SRC_ABSPATH}/integerCoding.cpp
+            ${Tinyusdz_SRC_ABSPATH}/lz4-compression.cc
+            ${Tinyusdz_SRC_ABSPATH}/lz4/lz4.c
+    )
+
+    set(tinyusdz_INCLUDE_DIRS "${Tinyusdz_SRC_ABSPATH}")
+    INCLUDE_DIRECTORIES(${tinyusdz_INCLUDE_DIRS})
+    SOURCE_GROUP( Contrib\\Tinyusdz
+            FILES
+            ${Tinyusdz_SRCS}
+            ${Tinyusdz_DEP_SOURCES}
+    )
+    MESSAGE(STATUS "tinyusdz enabled")
+ELSE() # IF (ASSIMP_BUILD_USD_IMPORTER)
+    set(Tinyusdz_SRCS "")
+    set(Tinyusdz_DEP_SOURCES "")
+    MESSAGE(STATUS "tinyusdz disabled")
+ENDIF() # IF (ASSIMP_BUILD_USD_IMPORTER)
 
 # pugixml
 IF(ASSIMP_HUNTER_ENABLED)
@@ -821,6 +841,8 @@ SET( assimp_src
   ${openddl_parser_SRCS}
   ${open3dgc_SRCS}
   ${ziplib_SRCS}
+  ${Tinyusdz_SRCS}
+  ${Tinyusdz_DEP_SOURCES}
   ${Pugixml_SRCS}
   ${stb_SRCS}
   # Necessary to show the headers in the project when using the VC++ generator:

@@ -63,7 +63,7 @@ corresponding preprocessor flag to selectively disable formats.
 #define ASSIMP_BUILD_NO_HMP_IMPORTER
 #define ASSIMP_BUILD_NO_SMD_IMPORTER
 #define ASSIMP_BUILD_NO_LWO_IMPORTER
-//#define ASSIMP_BUILD_NO_M3D_IMPORTER
+#define ASSIMP_BUILD_NO_M3D_IMPORTER
 #define ASSIMP_BUILD_NO_X3D_IMPORTER
 #define ASSIMP_BUILD_NO_ASSBIN_IMPORTER
 #define ASSIMP_BUILD_NO_XGL_IMPORTER
@@ -100,7 +100,11 @@ corresponding preprocessor flag to selectively disable formats.
 #define ASSIMP_BUILD_NO_MMD_IMPORTER
 #define ASSIMP_BUILD_NO_IQM_IMPORTER
 #define ASSIMP_BUILD_NO_STL_IMPORTER
+#define ASSIMP_BUILD_NO_USD_IMPORTER
 
+#if !defined(ASSIMP_BUILD_NO_USD_IMPORTER)
+#include "AssetLib/USD/USDLoader.h"
+#endif
 #ifndef ASSIMP_BUILD_NO_X_IMPORTER
 #include "AssetLib/X/XFileImporter.h"
 #endif
@@ -276,6 +280,9 @@ void GetImporterInstanceList(std::vector<BaseImporter *> &out) {
     // (register_new_importers_here)
     // ----------------------------------------------------------------------------
     out.reserve(64);
+#if !defined(ASSIMP_BUILD_NO_USD_IMPORTER)
+    out.push_back(new USDImporter());
+#endif
 #if (!defined ASSIMP_BUILD_NO_X_IMPORTER)
     out.push_back(new XFileImporter());
 #endif
